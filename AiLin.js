@@ -7,10 +7,21 @@
             { id: 'gemma-7b-it', name: 'Gemma 7B' }
         ],
         style: `
-            .groq-modal {position:fixed;top:10%;left:30%;background:#1e1e1e;padding:20px;border-radius:8px;z-index:10001;}
-            .groq-btn {position:fixed;bottom:20px;right:20px;z-index:10000;background:#4CAF50;color:white;padding:10px 15px;border:none;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:sans-serif;}
-            .groq-close {position:absolute;top:5px;right:10px;color:white;cursor:pointer;font-size:1.2em;}
-            svg.ai-icon {width:20px;height:20px;vertical-align:middle;fill:none;stroke:#fff;stroke-width:2;}
+            .groq-modal {
+                position: fixed; top: 10%; left: 30%; background: #1e1e1e; padding: 20px; border-radius: 8px;
+                z-index: 10001; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: opacity 0.3s;
+            }
+            .groq-btn {
+                position: fixed; bottom: 20px; right: 20px; z-index: 10000; background: #4CAF50; color: white;
+                padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; display: flex; align-items: center;
+                gap: 8px; font-family: sans-serif; box-shadow: 0 2px 6px rgba(0,0,0,0.2); border-radius: 20px;
+            }
+            .groq-close { position: absolute; top: 5px; right: 10px; color: white; cursor: pointer; font-size: 1.2em; }
+            svg.ai-icon {
+                width: 20px; height: 20px; vertical-align: middle; stroke: #fff; stroke-width: 2; fill: none;
+                transition: transform 0.3s ease;
+            }
+            .groq-btn:hover svg.ai-icon { transform: rotate(12deg); }
         `
     };
 
@@ -21,15 +32,18 @@
         </svg>
     `;
 
+    // Добавление стилей
     const styleSheet = document.createElement("style");
     styleSheet.type = "text/css";
     styleSheet.innerText = config.style;
     document.head.appendChild(styleSheet);
 
+    // Кнопка с иконкой
     const btn = document.createElement('button');
     btn.className = 'groq-btn';
-    btn.innerHTML = `${aiIcon}Chat с Groq`;
+    btn.innerHTML = `${aiIcon} Chat с Groq`;
 
+    // Модальное окно
     const modal = document.createElement('div');
     modal.className = 'groq-modal';
     modal.style.display = 'none';
@@ -43,11 +57,13 @@
         <pre id="response" style="margin-top:15px;color:#ccc;white-space:pre-wrap;font-family:sans-serif;line-height:1.4;"></pre>
     `;
 
+    // Вставка в DOM
     document.body.appendChild(btn);
     document.body.appendChild(modal);
+
+    // Заполнение списка моделей
     const select = modal.querySelector('#model-select');
     const response = modal.querySelector('#response');
-
     config.models.forEach(m => {
         const opt = document.createElement('option');
         opt.value = m.id;
@@ -55,7 +71,12 @@
         select.appendChild(opt);
     });
 
-    btn.onclick = () => modal.style.display = 'block';
+    // Обработчики событий
+    btn.onclick = () => {
+        modal.style.display = 'block';
+        modal.focus();
+    };
+    
     modal.querySelector('.groq-close').onclick = () => modal.style.display = 'none';
 
     modal.querySelector('#send-btn').onclick = async () => {
